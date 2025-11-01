@@ -1,0 +1,648 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinematic Letter Intro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, #1a1a1a, #000);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            transition: opacity 1s ease-in-out; /* For fade transitions */
+        }
+
+        .intro-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .content-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease-in-out;
+            background: radial-gradient(circle at center, #0f0f0f, #000);
+        }
+
+        .content-section.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .letter-image {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .animated-mail {
+            position: absolute;
+            height: 150px;
+            width: 200px;
+            transition: .4s;
+
+            .body {
+                position: absolute;
+                bottom: 0;
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 0 0 100px 200px;
+                border-color: transparent transparent #d3d3d3 transparent;
+                z-index: 2;
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            }
+
+            .top-fold {
+                position: absolute;
+                top: 50px;
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 50px 100px 0 100px;
+                transform-origin: 50% 0%;
+                transition: transform .4s .4s, z-index .2s .4s;
+                border-color: #b0b0b0 transparent transparent transparent;
+                z-index: 2;
+                box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+            }
+
+            .back-fold {
+                position: absolute;
+                bottom: 0;
+                width: 200px;
+                height: 100px;
+                background: #b0b0b0;
+                z-index: 0;
+                box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .left-fold {
+                position: absolute;
+                bottom: 0;
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 50px 0 50px 100px;
+                border-color: transparent transparent transparent #c0c0c0;
+                z-index: 2;
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+            }
+
+            .letter {
+                left: 20px;
+                bottom: 0px;
+                position: absolute;
+                width: 160px;
+                height: 60px;
+                background: #f5f5f5;
+                z-index: 1;
+                overflow: hidden;
+                transition: .4s .2s;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.05);
+                cursor: pointer;
+
+                .letter-border {
+                    height: 10px;
+                    width: 100%;
+                    background: repeating-linear-gradient(
+                        -45deg,
+                        #888,
+                        #888 8px,
+                        transparent 8px,
+                        transparent 18px
+                    );
+                }
+
+                .letter-title {
+                    margin-top: 10px;
+                    margin-left: 5px;
+                    height: 10px;
+                    width: 40%;
+                    background: #666;
+                }
+
+                .letter-context {
+                    margin-top: 10px;
+                    margin-left: 5px;
+                    height: 10px;
+                    width: 20%;
+                    background: #666;
+                }
+
+                .letter-stamp {
+                    margin-top: 30px;
+                    margin-left: 120px;
+                    border-radius: 100%;
+                    height: 30px;
+                    width: 30px;
+                    background: #666;
+                    opacity: 0.5;
+                }
+            }
+        }
+
+        .shadow {
+            position: absolute;
+            top: 200px;
+            left: 50%;
+            width: 400px;
+            height: 30px;
+            transition: .4s;
+            transform: translateX(-50%);
+            border-radius: 100%;
+            background: radial-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.0), rgba(0,0,0,0.0));
+        }
+
+        .letter-image:hover .animated-mail {
+            transform: translateY(50px);
+
+            .top-fold {
+                transition: transform .4s, z-index .2s;
+                transform: rotateX(180deg);
+                z-index: 0;
+            }
+
+            .letter {
+                height: 180px;
+            }
+
+            .shadow {
+                width: 250px;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 2s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .newspaper-title {
+            font-size: 3.5em;
+            font-family: 'Pirata One', serif;
+            text-align: center;
+            color: #7F3300;
+            margin-bottom: 0.5em;
+            margin-top: 0.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            border-bottom: 2px solid #7F3300;
+            padding-bottom: 0.2em;
+            font-weight: bold;
+        }
+
+        .newspaper-subtitle {
+            font-size: 1.3em;
+            font-family: 'Pirata One', serif;
+            text-align: center;
+            color: #5a3a1a;
+            margin-bottom: 0.5em;
+            line-height: 1.2;
+        }
+
+        .byline {
+            text-align: center;
+            font-style: italic;
+            color: #7F3300;
+            margin-bottom: 1em;
+            font-size: 0.9em;
+        }
+
+        .story-layout {
+            display: flex;
+            justify-content: space-between;
+            gap: 1em;
+            margin-top: 1em;
+            width: 100%;
+            align-items: flex-start;
+            height: auto;
+        }
+
+        .story-left {
+            width: 50%;
+            padding-right: 0.5em;
+            padding-left: 1em;
+        }
+
+        .story-left p {
+            color: #5a2d00;
+            font-family: 'Pirata One', serif;
+            font-size: 0.95em;
+            line-height: 1.5;
+            text-align: justify;
+            margin: 0 0 0.8em 0;
+        }
+
+        .story-left p:last-child {
+            margin-bottom: 2em;
+        }
+
+        .story-left p:first-child::first-letter {
+            float: left;
+            font-family: 'Morris', serif;
+            font-size: 3em;
+            margin-right: 0.2em;
+            color: #7F3300;
+            line-height: 0.9;
+        }
+
+        .story-right {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 0.5em;
+            padding-right: 1em;
+        }
+
+        .verdict-box {
+            border: 2px solid #8B4513;
+            background: rgba(255, 248, 220, 0.9);
+            padding: 1em;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            color: #3b1f00;
+            margin-bottom: 1.5em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            border-radius: 6px;
+        }
+
+        .verdict-box h3 {
+            color: #7F3300;
+            margin-top: 0;
+            margin-bottom: 0.3em;
+            text-align: center;
+            font-family: 'Pirata One', serif;
+            font-size: 1.2em;
+        }
+
+        .verdict-box p {
+            margin: 0.3em 0;
+            line-height: 1.3;
+            font-size: 0.9em;
+        }
+
+        .mugshot-bottom {
+            text-align: center;
+            width: 100%;
+        }
+
+        .mugshot-caption {
+            color: #7F3300;
+            margin-bottom: 0.3em;
+            font-style: italic;
+            font-family: 'Pirata One', serif;
+            font-size: 0.95em;
+        }
+
+        .mugshot-frame {
+            border: 2px solid #8B4513;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            background: rgba(255, 248, 220, 0.95);
+            padding: 4px;
+            display: inline-block;
+            border-radius: 6px;
+        }
+
+        .mugshot-frame img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+            border-radius: 3px;
+        }
+
+        .decorative-quote {
+            font-family: 'Bilbo Swash Caps', cursive;
+            font-style: italic;
+            font-size: 1em;
+            color: #7F3300;
+            text-align: center;
+            margin-top: 1em;
+            line-height: 1.4;
+            padding: 0.5em;
+            background: rgba(255, 248, 220, 0.7);
+            border-left: 3px solid #8B4513;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+
+
+        .button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 248, 220, 0.9);
+            color: #7F3300;
+            border: 2px solid #8B4513;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'Pirata One', serif;
+            font-size: 0.9em;
+            border-radius: 6px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 20;
+        }
+
+        .button:hover {
+            background: rgba(255, 248, 220, 1);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            #parchment {
+                width: 95%;
+                padding: 1.5em 2em 3em 2em;
+            }
+            .newspaper-title {
+                font-size: 2.5em;
+            }
+            .story-left p {
+                font-size: 0.85em;
+            }
+            .mugshot-frame img {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        @import url('https://fonts.googleapis.com/css?family=Pirata+One|Bilbo+Swash+Caps&display=swap');
+
+        @font-face {
+            font-family: Morris;
+            src: url(https://cdn.statically.io/gh/EmmesCodes/Tipografias/dae9f5bb/MorrisInitials.ttf);
+        }
+
+        :root {
+            --fontSize: calc((1vw + 1vh) * .75);
+        }
+
+        *, *:before, *:after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font: var(--fontSize)/200% 'Bilbo Swash Caps', cursive;
+            background-image: url(https://images.unsplash.com/photo-1546484396-fb3fc6f95f98);
+            background-size: cover;
+        }
+
+        main {
+            position: relative;
+            width: 100%;
+            height: auto;
+        }
+
+        #parchment {
+            position: relative;
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto 3em auto;
+            padding: 5em 2.5em 2.5em 2.5em;
+            box-shadow: 2px 3px 20px black, 0 0 125px #8f5922 inset;
+            background: #fffef0;
+            filter: none;
+            background-image: url(data:image/png;base64,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);
+            border-radius: 8px;
+            z-index: 0;
+            overflow: auto;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            transform: scale(0.9);
+            transform-origin: center;
+        }
+
+        #parchment::-webkit-scrollbar {
+            display: none;
+        }
+
+        #parchment::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: #fffef0;
+            filter: url(#wavy2);
+            z-index: -1;
+        }
+
+        #parchment:hover {
+            filter: none;
+        }
+
+        #parchment:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(#fff3, #fff0 2% 24%, #fff2 25%, #4321 0, #0000 27% 48%, #9632 50%, #fff2 0, #fff0 52% 73%, #9632 75%, #fff3 0, #fff0 78% 97%, #9632);
+        }
+
+        main p {
+            font-size: 2.25em;
+            color: #7F3300;
+            margin-top: .75em;
+            text-align: justify;
+        }
+
+        .story-columns p:first-child::first-letter {
+            float: left;
+            font: 1.7em/1em Morris;
+            text-shadow: 1px 1px 1px black;
+            margin: 0 .5rem;
+        }
+
+        #contain {
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .inkTitle {
+            font-size: 3em;
+            font-family: Pirata One, sans-serif;
+            text-align: center;
+            line-height: 3em;
+            color: DimGray;
+        }
+
+        #labarum {
+            width: 20%;
+            margin-left: calc((100% - 20%) / 2);
+            height: auto;
+        }
+
+        .cachet {
+            width: calc((100vw * 5) / 42);
+            height: auto;
+            margin-top: 4rem;
+            margin-left: auto;
+        }
+
+        #labarum img, .cachet img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+
+        #signature {
+            text-align: right;
+            color: black;
+            font-size: 250%;
+        }
+    </style>
+</head>
+<body>
+    <div class="intro-section" id="intro">
+        <div class="letter-image">
+            <div class="animated-mail">
+                <div class="back-fold"></div>
+                <div class="letter" id="letter">
+                    <div class="letter-border"></div>
+                    <div class="letter-title"></div>
+                    <div class="letter-context"></div>
+                    <div class="letter-stamp">
+                        <div class="letter-stamp-inner"></div>
+                    </div>
+                </div>
+                <div class="top-fold"></div>
+                <div class="body"></div>
+                <div class="left-fold"></div>
+            </div>
+            <div class="shadow"></div>
+        </div>
+    </div>
+
+    <div class="content-section" id="content">
+        <main>
+            <div id="parchment">
+                <div id="contain" class="fade-in">
+                    <h1 class="newspaper-title">The Pibble SMP Gazette</h1>
+                    <h2 class="newspaper-subtitle">NotLazare1’s Prank Gone Wrong: The Mystery of Joe the Strider</h2>
+                    <p class="byline"><em>By Staff Reporter — Pibble SMP Bureau</em></p>
+                    <div class="story-layout">
+                        <div class="story-left">
+                            <p>What began as a harmless one-hour prank has turned into one of the most bizarre tragedies ever recorded on the Pibble SMP server.</p>
+                            <p>Player NotLazare1 confessed to planning a small scare for Ulane_, the proud owner of a beloved female Strider named Joe — a calm, lava-loving creature adored for her courage and red glow.</p>
+                            <p>“It was supposed to be funny,” NotLazare1 told The Pibble SMP Gazette. “I wanted her to think Joe had died — just for a minute.”</p>
+                            <p>To stage the prank, NotLazare1 discovered a wolf, named it Joe, and secretly relocated the real Strider to a different area, ensuring she would be safe. The plan? Make the chat display a fake death message.</p>
+                            <p>The only other player online, Abdul, was called in for help — but had no idea how to make that happen.</p>
+                            <p>“We tried everything,” said NotLazare1. “Then I just… used lava.”</p>
+                            <p>Moments later, the fateful message appeared: “Joe died.”</p>
+                            <p>Ulane_ was horrified. She sprinted to Joe’s pen — only to find it empty. When confronted, NotLazare1 admitted it was all a joke, assuring her that Joe was alive and tethered elsewhere.</p>
+                            <p>Together, they rushed to the location — but it was too late. Joe was gone.</p>
+                            <p>Server logs showed no official cause of death, yet evidence suggested a grim truth: the rain had begun moments earlier. Since Joe was roped to a fence, unable to reach lava for warmth, her fiery spirit had simply… faded away.</p>
+                        </div>
+
+                        <div class="story-right">
+                            <div class="verdict-box">
+                                <h3>⚖️ Verdict:</h3>
+                                <p><strong>Crime:</strong> Reckless pranking and accidental Strider manslaughter.</p>
+                                <p><strong>Sentence:</strong> Lifetime banishment from every city: “creative jokes involving lava.”</p>
+                            </div>
+                            <div class="mugshot-bottom">
+                                <p class="mugshot-caption">Official Mugshot: NotLazare1</p>
+                                <div class="mugshot-frame">
+                                    <img src="images/skin-mugshot.png" alt="Minecraft Skin Mugshot">
+                                </div>
+                                <blockquote class="decorative-quote">
+                                    “The two most important days in your life are the day you are born and the day you find out why.”
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <svg>
+            <filter id="wavy2">
+                <feTurbulence x="0" y="0" baseFrequency="0.02" numOctaves="5" seed="1" />
+                <feDisplacementMap in="SourceGraphic" scale="20" />
+            </filter>
+        </svg>
+
+        <button class="button" onclick="goBack()">Back</button>
+    </div>
+
+    <script>
+        const letter = document.getElementById('letter');
+        const intro = document.getElementById('intro');
+        const content = document.getElementById('content');
+
+        letter.addEventListener('click', () => {
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.style.display = 'none';
+                content.classList.add('active');
+            }, 1000); // Match transition duration
+        });
+
+        function goBack() {
+            content.classList.remove('active');
+            setTimeout(() => {
+                intro.style.display = 'flex';
+                intro.style.opacity = '1';
+            }, 1000);
+        }
+
+        // Redraw when viewport is modified
+        window.addEventListener('resize', function(event){
+            ScrollHeight();
+        });
+
+        function ScrollHeight() {
+            var content = document.querySelector('#parchment');
+            var container = document.querySelector('#contain');
+
+            // Get parchment padding values
+            var parchmentPaddingTop = parseFloat(getComputedStyle(content).paddingTop);
+            var parchmentPaddingBottom = parseFloat(getComputedStyle(content).paddingBottom);
+
+            // SVG feTurbulence can modify all others elements, for this reason "parchment" is in another <div> and in absolute position.
+            // so for a better effect, absolute height is defined by his content plus padding.
+            content.style.height = (container.offsetHeight + parchmentPaddingTop + parchmentPaddingBottom) + 'px';
+        }
+
+        // Call after everything loads
+        window.onload = ScrollHeight;
+    </script>
+</body>
+</html>
